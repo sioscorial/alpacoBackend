@@ -103,11 +103,31 @@ const signUp = async (name, socialId) => {
     [name, socialId]
   );
 };
-
+const createUser = async function (
+  name,
+  hashedPassword,
+) {
+  try {
+    const result = await dataSource.query(
+      `INSERT INTO 
+              users(
+              name,
+              password,
+              ) VALUES (?, ?);
+          `,
+      [name, hashedPassword]
+    );
+    return result;
+  } catch (error) {
+    const err = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 400;
+    throw err;
+  }
+};
 module.exports = {
   getUserBySocialId,
   signUp,
   getUserById,
-  updateUserInfo,
+  createUser,
   getUserInfo,
 };

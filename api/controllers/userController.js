@@ -26,8 +26,34 @@ const getUserInfo = catchAsync(async (req, res) => {
   res.status(200).json(result);
 });
 
+
+
+const signUp = catchAsync(async (req, res) => {
+  try {
+    const { name ,password} = req.body;
+
+    if (!name || !password) {
+      const error = new Error(
+        'KEY_ERROR: Missing required fields: name, email, password.'
+      );
+      error.statusCode = 400;
+      throw error;
+    }
+    await userService.signUp(name, password);
+
+    return res.status(201).json({
+      message: 'SIGNUP_SUCCESS',
+    });
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({ message: error.message });
+  }
+});
+
+
+
 module.exports = {
   signIn,
+  signUp,
   updateUserInfo,
   getUserInfo,
 };

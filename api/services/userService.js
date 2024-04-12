@@ -1,6 +1,7 @@
 const userDao = require("../models/userDao");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs');
 
 const signIn = async (kakaoCode) => {
   const clientId = process.env.CLIENT_ID;
@@ -77,8 +78,20 @@ const getUserInfo = async (userId) => {
   return await userDao.getUserInfo(userId);
 };
 
+const signUp = async ( name, password) => {
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const createUser = await userDao.createUser(
+    name,
+    hashedPassword,
+  );
+  return createUser;
+};
+
 module.exports = {
   updateUserInfo,
   signIn,
   getUserInfo,
+  signUp
 };
+
